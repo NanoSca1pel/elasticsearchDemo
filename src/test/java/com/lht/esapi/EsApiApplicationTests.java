@@ -37,9 +37,7 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilde
 import org.springframework.data.elasticsearch.core.query.SearchQuery;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @SpringBootTest
@@ -59,6 +57,14 @@ class EsApiApplicationTests {
     void createIndex() throws IOException {
         //① 创建索引请求
         CreateIndexRequest request = new CreateIndexRequest("test_index");
+        //复制代码
+        Map<String, Object> message = new HashMap<>();
+        message.put("type", "text");
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("message", message);
+        Map<String, Object> mapping = new HashMap<>();
+        mapping.put("properties", properties);
+        request.mapping(mapping);
         //② 客户端执行请求 IndicesClient, 请求后获得响应
         CreateIndexResponse response = client.indices().create(request, RequestOptions.DEFAULT);
         System.out.println(response);

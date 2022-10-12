@@ -21,7 +21,7 @@ public class PolicyPageProcessor implements PageProcessor {
 
     private Site site = Site.me();
 
-    private static final String LIST_URL = "http://hqt.link2x.cn/api/api-policy/zcPolicy/list/.*";
+    private static final String LIST_URL = "https://hqt.link2x.cn/api/api-policy/zcRead/list/.*";
 
     @Override
     public void process(Page page) {
@@ -30,7 +30,7 @@ public class PolicyPageProcessor implements PageProcessor {
         List<String> ids = new JsonPathSelector("$.obj.content[*].base_id").selectList(page.getRawText());
         if (CollectionUtils.isNotEmpty(ids)) {
             for (String id : ids) {
-                page.addTargetRequest("http://hqt.link2x.cn/api/api-policy/zcPolicy/queryDetailById/" + id);
+                page.addTargetRequest("http://hqt.link2x.cn/api/api-policy/zcRead/queryById/" + id);
             }
         } else {
             page.putField("title", new JsonPathSelector("$.obj.title").select(page.getRawText()));
@@ -45,8 +45,8 @@ public class PolicyPageProcessor implements PageProcessor {
     public static void main(String[] args) {
         Request request = new Request();
         request.setMethod("POST");
-        request.setUrl("http://hqt.link2x.cn/api/api-policy/zcPolicy/list/0/12");
-        request.setRequestBody(HttpRequestBody.json("{\"policyInformation\":\"\",\"province\":\"CBA08CFF-F58C-464D-AF41-6D3682C3DE36\",\"city\":\"04FA5137-4D7C-4FD5-B6D7-DFF4AA583765\",\"sortId\":\"0\",\"sortType\":\"desc\"}\n", "UTF-8"));
+        request.setUrl("http://hqt.link2x.cn/api/api-policy/zcRead/list/0/12");
+        request.setRequestBody(HttpRequestBody.json("{\"pageNum\":0,\"pageSize\":12,\"regional\":\"\",\"province\":\"\",\"city\":\"\",\"system\":\"\",\"state\":\"\",\"district\":\"\",\"title\":\"\"}", "UTF-8"));
         Spider.create(new PolicyPageProcessor()).addRequest(request).run();
     }
 }
